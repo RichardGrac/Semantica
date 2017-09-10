@@ -39,14 +39,25 @@ public class Numeros {
                 if (t.hijoDerecho != null){
                     t.hijoDerecho.base = t.base;
                     EvalWithBase(t.hijoDerecho);
-                    if ((t.hijoIzquierdo.val != "error") && (t.hijoDerecho.val != "error")){
+                    if ((t.hijoIzquierdo.val_name != "error") && (t.hijoDerecho.val_name != "error")){
                         t.val = (t.base * t.hijoIzquierdo.val) + t.hijoDerecho.val;
                     }else{
-                        t.val = "error";
+                        t.val_name = "error";
                     }
                 }else{
                     t.val = t.hijoIzquierdo.val;
                 }
+                break;
+            case "carbase":
+                if (t.hijoDerecho.base_name.equals("o")) t.base = 8;
+                else t.base = 10;
+                break;
+            case "digito":
+                if ((t.base == 8) && (t.val == 8 || t.val == 9)) {
+                    t.val_name = "error";
+                }else{
+                    t.val = Integer.parseInt(t.val_name); // <-- Verificar -- t.val := numval ( hijo de T )
+            }
         }
     }
 
@@ -61,9 +72,19 @@ public class Numeros {
 
     class Treenode{
         String claseNodo;
-        int val;
-        int base;
+        Integer val;
+        String val_name;
+        Integer base;
+        String base_name;
         Treenode hijoIzquierdo;
         Treenode hijoDerecho;
+
+        public Treenode(String claseNodo, String val_name, String base_name, Treenode hijoIzquierdo, Treenode hijoDerecho) {
+            this.claseNodo = claseNodo;
+            this.val_name = val_name;
+            this.base_name = base_name;
+            this.hijoIzquierdo = hijoIzquierdo;
+            this.hijoDerecho = hijoDerecho;
+        }
     }
 }
