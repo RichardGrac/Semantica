@@ -1,6 +1,3 @@
-import javax.swing.*;
-import java.util.ArrayList;
-
 public class Numeros {
     /* Considere la gramática dada para numeros octales y decimales:
     Reglas gramáticales:
@@ -26,45 +23,6 @@ public class Numeros {
         4.- digito --> digito.val = if digito.base = 8 then error else 8
         4.- digito --> digito.val = if digito.base = 8 then error else 9
     */
-    ArrayList<Token> tokens;
-    char base = 'd';
-    boolean band;
-
-    Numeros(){
-        do {
-            // band = para saber si la entrada es correcta
-            // input = entrada del numero a trabajar
-            // num[] = cadena de numeros a trabajar
-            band = true;
-            String input = JOptionPane.showInputDialog("Ingrese un numero con base (o | d | vacío): ");
-            tokens = new ArrayList<>();
-
-            if (input.length()==0){
-                band = false;
-            }
-            for (int i=0; i<input.length(); i++){
-                if(input.charAt(i) == 'o' || input.charAt(i) == 'd'){
-                    // SI la base es el último carácter entrado:
-                    if (i == input.length()-1){
-                        base=input.charAt(i);
-                        tokens.add(new Token("CARBASE",null,String.valueOf(base)));
-                    }else{
-                        band = false;
-                    }
-                    break;
-                }
-                try {
-                    // Casteamos el caracter actual a un valor:
-                    int valor = Integer.parseInt(String.valueOf(input.charAt(i)));
-                    tokens.add(new Token("DIGITO",valor,null));
-                }catch (Exception e){
-                    band = false;
-                    break;
-                }
-            }
-        }while(!band);
-        if (band) System.out.println("Aceptado.");
-    }
 
     public void EvalWithBase(Treenode t){
         String kind = t.claseNodo;
@@ -107,40 +65,5 @@ public class Numeros {
         int base;
         Treenode hijoIzquierdo;
         Treenode hijoDerecho;
-    }
-    class Token{
-        String tipo;
-        Integer valor;
-        String base;
-
-        Token(String tipo, Integer valor, String base) {
-            this.tipo = tipo;
-            this.valor = valor;
-            this.base = base;
-        }
-
-        public String getTipo() {
-            return tipo;
-        }
-
-        public void setTipo(String tipo) {
-            this.tipo = tipo;
-        }
-
-        public Integer getValor() {
-            return valor;
-        }
-
-        public void setValor(Integer valor) {
-            this.valor = valor;
-        }
-
-        public String getBase() {
-            return base;
-        }
-
-        public void setBase(String base) {
-            this.base = base;
-        }
     }
 }
