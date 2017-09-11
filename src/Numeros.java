@@ -1,5 +1,6 @@
-public class Numeros {
-    /* Considere la gramática dada para numeros octales y decimales:
+/* By Ricardo García */
+
+/* Considere la gramática dada para numeros octales y decimales:
     Reglas gramáticales:
         1.- num-base --> num carbase
         2.- carbase  --> o | d
@@ -24,7 +25,23 @@ public class Numeros {
         4.- digito --> digito.val = if digito.base = 8 then error else 9
     */
 
-    public void EvalWithBase(Treenode t){
+public class Numeros {
+
+    private Numeros(){
+        //Construimos de árbol manualmente porque se supone que ya tenemos el árbol construído en el análisis sintáctico
+        Treenode dig_3 = new Treenode("digito", "3", "", null, null);
+        Treenode dig_4 = new Treenode("digito", "4", "", null, null);
+        Treenode dig_5 = new Treenode("digito", "5", "", null, null);
+        Treenode carbase = new Treenode("carbase", "", "o", null, null);
+
+        Treenode num_3 = new Treenode("num", "", "", dig_3, null);
+        Treenode num_34 = new Treenode("num", "", "", num_3, dig_4);
+        Treenode num_345 = new Treenode("num", "", "", num_34, dig_5);
+        Treenode t = new Treenode("num-base", null, null, num_345, carbase);
+        EvalWithBase(t);
+    }
+
+    private void EvalWithBase(Treenode t){
         String kind = t.claseNodo;
         switch(kind){
             case "num-base":
@@ -32,10 +49,12 @@ public class Numeros {
                 t.hijoIzquierdo.base = t.hijoDerecho.base;
                 EvalWithBase(t.hijoIzquierdo);
                 t.val = t.hijoIzquierdo.val;
+                if (t.val == null) System.out.println("Error semántico.");
+                else System.out.println("345o = " + t.val + "d");   // Cambiar el "345o" si damos otra entrada...
                 break;
             case "num":
                 t.hijoIzquierdo.base = t.base;
-                EvalWithBase(t.hijoDerecho);
+                EvalWithBase(t.hijoIzquierdo);
                 if (t.hijoDerecho != null){
                     t.hijoDerecho.base = t.base;
                     EvalWithBase(t.hijoDerecho);
@@ -49,28 +68,32 @@ public class Numeros {
                 }
                 break;
             case "carbase":
-                if (t.hijoDerecho.base_name.equals("o")) t.base = 8;
+                if (t.base_name.equals("o")) t.base = 8;
                 else t.base = 10;
                 break;
             case "digito":
-                if ((t.base == 8) && (t.val == 8 || t.val == 9)) {
+                if ((t.base == 8) && (t.val_name == "8" || t.val_name == "9")) {
                     t.val_name = "error";
                 }else{
-                    t.val = Integer.parseInt(t.val_name); // <-- Verificar -- t.val := numval ( hijo de T )
+                    t.val = Integer.parseInt(t.val_name);
             }
         }
     }
 
-    /*
-    * val = int
-    * base = int
-    * kindNode = numbase | num | carbase | digito
-    * */
     public static void main(String[] args) {
         new Numeros();
     }
 
     class Treenode{
+        /*
+        * claseNodo: tipo de nodo que és: num-base - base - num - digito - carbase
+        * val: valor entero resultado del casteo de val_name
+        * val_name: valor leído. String para poder asignarle "error" en caso necesario
+        * base: decimal [10] u octal [8]
+        * base_name: decimal [d] u octal [o]
+        * hijoIzquierdo e hijoDerecho: a donde se liga el árbol
+        */
+
         String claseNodo;
         Integer val;
         String val_name;
@@ -88,3 +111,5 @@ public class Numeros {
         }
     }
 }
+
+/* Fuente: UNED Construcción de compiladores principios y práctica - Kenneth C Louden 2004, Pag. 282 */
